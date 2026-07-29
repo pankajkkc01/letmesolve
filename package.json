@@ -1,0 +1,10 @@
+{
+  "name": "letmesolve",
+  "version": "0.0.0",
+  "private": true,
+  "description": "letmesolve.in - portfolio + reach-out pipeline (buildless static frontend, Vercel serverless backend)",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}

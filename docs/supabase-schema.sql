@@ -1,0 +1,2 @@
+-- Source of truth for the Supabase schema. Filled in during Phase 2.
+-- Will define: projects table, enquiries table, and RLS policies.
