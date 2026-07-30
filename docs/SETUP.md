@@ -12,7 +12,14 @@ Click-by-click account setup, filled in as each phase needs it.
 
 ## Phase 2 — Supabase
 
-_Added when Phase 2 starts: project creation, running `supabase-schema.sql`, storage bucket setup._
+1. Go to [supabase.com](https://supabase.com) → sign in (GitHub login is fastest) → **New project**.
+2. Pick your organization, name it (e.g. `letmesolve`), set a database password (save it somewhere — you likely won't need it day-to-day, but you'll want it if you ever connect a Postgres client directly), pick the region closest to you, and create the project. Provisioning takes ~1-2 minutes.
+3. Once the project is ready, go to **Project Settings → API**. Copy:
+   - **Project URL** (e.g. `https://xxxxxxxx.supabase.co`)
+   - **anon public** key (under "Project API keys" — NOT the `service_role` key, that one never leaves the server)
+4. Go to **SQL Editor → New query**, paste the entire contents of `docs/supabase-schema.sql`, and run it. This creates the `projects` table, its RLS policies, the storage policies, and seeds 2 sample case studies.
+5. Go to **Storage → New bucket**. Name it exactly `project-images`, toggle **Public bucket** ON, and create it. (The read/write policies for it were already created by the SQL script in step 4.)
+6. Paste the Project URL + anon key into `public/js/config.js`.
 
 ## Phase 4 — Mailjet + domain email
 

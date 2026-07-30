@@ -1,6 +1,9 @@
-// Boot: mobile nav toggle + a placeholder handler for the contact form.
-// The form starts POSTing to /api/enquiry for real in Phase 4 — until then
-// it just tells the visitor to email directly instead of failing silently.
+// Boot: mobile nav toggle, case studies fetched from Supabase, and a
+// placeholder handler for the contact form. The form starts POSTing to
+// /api/enquiry for real in Phase 4 — until then it just tells the visitor
+// to email directly instead of failing silently.
+import { loadProjects } from "./data.js";
+import { renderProjects } from "./render.js";
 
 function initNavToggle() {
   const toggle = document.getElementById("nav-toggle");
@@ -51,5 +54,11 @@ function initContactFormPlaceholder() {
   });
 }
 
+async function initWork() {
+  const projects = await loadProjects();
+  renderProjects(projects);
+}
+
 initNavToggle();
 initContactFormPlaceholder();
+initWork();
