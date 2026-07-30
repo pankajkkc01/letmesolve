@@ -19,7 +19,8 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - Contact form is structural only — submitting shows a toast pointing to direct email; `POST /api/enquiry` wiring lands in Phase 4
 - About section uses an initials placeholder instead of a real photo; About copy is provisional (real photo + final voice pass is Phase 5)
 - LinkedIn/WhatsApp links intentionally omitted (Phase 5) rather than shipped as dead links
-- Static verification only (no orphaned CSS classes, no missing JS targets, no dead anchors, JS syntax valid). Live-browser checks — responsive at 360/768/1440px, console-clean, Lighthouse (Performance ≥90, Accessibility ≥95, SEO=100) — were **not run this session** (Chrome extension mid-install); still needed to formally close Phase 1's exit criteria
+- Verified: static checks (no orphaned CSS classes, no missing JS targets, no dead anchors, JS syntax valid) + manual visual check by Pankaj on desktop and phone width, looked correct on both
+- Not run: a formal Lighthouse audit (Performance/Accessibility/SEO scores) — worth a pass before Phase 6 launch QA if not done sooner
 
 ## [v0.0] — 2026-07-29 — Phase 0: Project scaffolding
 
