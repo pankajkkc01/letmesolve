@@ -3,6 +3,23 @@
 All notable changes to this project are documented here, per phase, newest first.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [v0.2] — 2026-07-31 — Phase 2: Supabase data layer
+
+### Added
+- `docs/supabase-schema.sql` — `projects` table (full field set: name, client, industry, role, duration, problem, built, impact, tech_tags, screenshot_url, video_url, testimonial + testimonial_name/testimonial_linkedin_url, published, sort_order), `updated_at` trigger, RLS policies (anon reads published rows only, authenticated has full CRUD), storage policies for the `project-images` bucket, and idempotent seed data (2 sample case studies)
+- `supabaseClient.js` — Supabase client via CDN ESM import (buildless — no npm install for the frontend)
+- `data.js` — `loadProjects()`: fetches published projects ordered by `sort_order`, fails soft to an empty array
+- `render.js` — renders case-study cards into `#work-list` (problem/built/impact, tech tag chips, role/duration, testimonial with LinkedIn-linked name, optional screenshot/video); leaves the static empty-state untouched when there are 0 published rows
+- `.case-card` / `.case-media` / `.case-body` / `.case-tags` / `.case-testimonial` styles in `sections.css`, built entirely from existing design tokens
+- `main.js` now loads + renders projects on boot alongside the existing nav toggle and contact form placeholder
+- `docs/SETUP.md` — click-by-click Supabase project setup for Phase 2
+
+### Notes
+- Verified live against a real Supabase project: anon read returns both seeded published case studies; anon INSERT is rejected (401, RLS violation); anon DELETE matches zero rows (row still present) — read works, write doesn't
+- Manual QA: both seeded case studies render correctly on a local static server, no console errors
+- `public/js/config.js` now contains the real (frontend-safe) Project URL + anon key for this Supabase project — this is expected and matches the plan's secrets boundary (anon key is public-safe; `service_role` key never goes here)
+- `save` / `delete` / `reorder` in `data.js` and the `/admin` UI are Phase 3 — this phase only wires the public read path
+
 ## [v0.1] — 2026-07-31 — Phase 1: Static public site
 
 ### Added
