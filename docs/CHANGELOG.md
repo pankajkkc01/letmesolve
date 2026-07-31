@@ -3,6 +3,21 @@
 All notable changes to this project are documented here, per phase, newest first.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — Phase 3: Admin panel + auth
+
+### Added
+- `admin.html` (served at `/admin` via a `vercel.json` rewrite) — login screen + admin panel shell, `noindex` and kept out of `robots.txt` crawling
+- `auth.js` — `signIn` / `signOut` / `getSession` / `onAuthChange` wrapping Supabase Auth; no sign-up path exists anywhere in the UI (single-admin-user model)
+- `data.js` gains `loadAllProjects` (draft + published, for the admin list), `saveProject` (insert/update via upsert), `deleteProject`, `updateSortOrder`, `uploadProjectImage` (uploads to the `project-images` bucket, returns its public URL)
+- `admin.js` — full CRUD wiring: add / edit / delete, up/down reordering (renumbers `sort_order` for the whole list on every move so ordering never drifts), screenshot upload with a live preview, draft/published toggle (new entries default to draft), all fields from the schema including the testimonial name-links-to-LinkedIn behavior reused from the public renderer
+- `admin.css` — login screen + admin list/form styling, tokens only
+- `docs/SETUP.md` — Phase 3 section: creating the single admin user in the Supabase dashboard, disabling public sign-ups
+
+### Notes
+- Code-complete and self-reviewed; the actual login round-trip against a live Supabase project still needs the admin user created per `docs/SETUP.md` § Phase 3, then a manual pass through the full exit-criteria checklist in `docs/plan.md` § Phase 3 before this is tagged `v0.3` and merged to `main`
+- Reordering always renumbers every row's `sort_order` to its new array index rather than swapping two raw values — avoids ordering drift if rows ever end up with duplicate/gapped `sort_order` values
+- Image filenames are sanitized before use as the storage object key (non-alphanumeric characters replaced with `-`) to avoid upload failures on filenames with spaces/special characters
+
 ## [v0.2] — 2026-07-31 — Phase 2: Supabase data layer
 
 ### Added
