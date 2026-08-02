@@ -21,6 +21,10 @@
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231D4ED8'/%3E%3Ctext x='50' y='68' font-family='monospace' font-size='58' font-weight='700' fill='white' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E" />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/components.css" />
@@ -64,7 +68,8 @@
   </header>
 
   <main id="main">
-    <section class="hero" id="top">
+    <section class="hero theme-dark" id="top">
+      <div class="hero-texture" aria-hidden="true"></div>
       <div class="container hero-inner">
         <span class="hero-eyebrow">Pankaj Sharma · System Builder</span>
         <h1 class="hero-title">
@@ -77,6 +82,18 @@
           <a class="btn btn-primary" href="#contact">Start a project</a>
           <a class="btn btn-secondary" href="#services">How I can help</a>
         </div>
+        <div class="hero-trust">
+          <span class="chip">Solo builder</span>
+          <span class="chip">Remote-friendly</span>
+          <span class="chip">Direct client work</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof">
+      <div class="container proof-inner">
+        <span class="proof-label">Trusted by teams like</span>
+        <div class="logo-marquee" id="logo-marquee" aria-hidden="true"></div>
       </div>
     </section>
 
@@ -90,6 +107,7 @@
 
         <div class="services-grid">
           <article class="card">
+            <span class="card-index" aria-hidden="true">01</span>
             <span class="card-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             </span>
@@ -98,6 +116,7 @@
           </article>
 
           <article class="card">
+            <span class="card-index" aria-hidden="true">02</span>
             <span class="card-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
             </span>
@@ -106,6 +125,7 @@
           </article>
 
           <article class="card">
+            <span class="card-index" aria-hidden="true">03</span>
             <span class="card-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
             </span>
@@ -114,6 +134,7 @@
           </article>
 
           <article class="card">
+            <span class="card-index" aria-hidden="true">04</span>
             <span class="card-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6M12 14l-5-5M12 14l5-5M12 8V4"/><circle cx="12" cy="4" r="2"/><circle cx="7" cy="9" r="2"/><circle cx="17" cy="9" r="2"/><circle cx="12" cy="20" r="2"/></svg>
             </span>
@@ -217,8 +238,9 @@
     </section>
   </main>
 
-  <footer class="footer">
+  <footer class="footer theme-dark">
     <div class="container footer-inner">
+      <a class="nav-logo" href="#top">letmesolve<span class="accent">.in</span></a>
       <span>© 2026 Pankaj Sharma</span>
       <div class="footer-links">
         <a href="mailto:info@letmesolve.in">Email</a>

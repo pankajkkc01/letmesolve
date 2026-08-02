@@ -7,7 +7,11 @@ import {
   saveProject,
   deleteProject,
   updateSortOrder,
-  uploadProjectImage,
+  loadAllClientLogos,
+  saveClientLogo,
+  deleteClientLogo,
+  updateClientLogoSortOrder,
+  uploadImage,
 } from "./data.js";
 
 const loginScreen = document.getElementById("login-screen");
@@ -22,6 +26,21 @@ const loginError = document.getElementById("login-error");
 const addBtn = document.getElementById("add-btn");
 const listStatus = document.getElementById("list-status");
 const adminList = document.getElementById("admin-list");
+
+const addLogoBtn = document.getElementById("add-logo-btn");
+const logoListStatus = document.getElementById("logo-list-status");
+const logoAdminList = document.getElementById("logo-admin-list");
+const logoFormWrap = document.getElementById("logo-form-wrap");
+const logoForm = document.getElementById("logo-form");
+const logoFormTitle = document.getElementById("logo-form-title");
+const logoFormError = document.getElementById("logo-form-error");
+const logoCancelBtn = document.getElementById("logo-cancel-btn");
+const logoSaveBtn = document.getElementById("logo-save-btn");
+const logoFieldId = document.getElementById("logo-field-id");
+const logoFieldName = document.getElementById("logo-field-name");
+const logoFieldFile = document.getElementById("logo-field-file");
+const logoFieldPreview = document.getElementById("logo-field-preview");
+const logoFieldPublished = document.getElementById("logo-field-published");
 
 const formWrap = document.getElementById("project-form-wrap");
 const form = document.getElementById("project-form");
@@ -51,6 +70,10 @@ const fieldPublished = document.getElementById("field-published");
 let projects = [];
 let pendingScreenshotFile = null;
 let existingScreenshotUrl = "";
+
+let clientLogos = [];
+let pendingLogoFile = null;
+let existingLogoUrl = "";
 
 function escapeHtml(value) {
   const div = document.createElement("div");
@@ -83,6 +106,7 @@ function showPanel() {
   adminPanel.hidden = false;
   logoutBtn.hidden = false;
   loadAndRenderList();
+  loadAndRenderLogoList();
 }
 
 async function loadAndRenderList() {
@@ -240,7 +264,7 @@ form.addEventListener("submit", async (event) => {
   try {
     let screenshotUrl = existingScreenshotUrl;
     if (pendingScreenshotFile) {
-      screenshotUrl = await uploadProjectImage(pendingScreenshotFile);
+      screenshotUrl = await uploadImage(pendingScreenshotFile);
     }
 
     const payload = {
@@ -279,6 +303,176 @@ form.addEventListener("submit", async (event) => {
   } finally {
     saveBtn.disabled = false;
     saveBtn.textContent = "Save";
+  }
+});
+
+/* ---- Trusted-by logos (independent of case studies) ---- */
+
+async function loadAndRenderLogoList() {
+  logoListStatus.textContent = "Loading…";
+  try {
+    clientLogos = await loadAllClientLogos();
+    renderLogoList();
+    logoListStatus.textContent = clientLogos.length ? "" : "No logos yet — add your first one.";
+  } catch (err) {
+    logoListStatus.textContent = `Failed to load logos: ${err.message}`;
+  }
+}
+
+function logoRowHtml(logo, index, total) {
+  return `
+    <div class="admin-row" data-id="${logo.id}">
+      <div class="admin-row-thumb">
+        <img src="${escapeHtml(logo.logo_url)}" alt="" />
+      </div>
+      <div class="admin-row-info">
+        <span class="admin-row-name">${escapeHtml(logo.company_name)}</span>
+        <span class="badge ${logo.published ? "badge-published" : "badge-draft"}">
+          ${logo.published ? "Published" : "Draft"}
+        </span>
+      </div>
+      <div class="admin-row-actions">
+        <button class="btn-icon" type="button" data-action="up" aria-label="Move up" ${index === 0 ? "disabled" : ""}>↑</button>
+        <button class="btn-icon" type="button" data-action="down" aria-label="Move down" ${index === total - 1 ? "disabled" : ""}>↓</button>
+        <button class="btn btn-secondary" type="button" data-action="edit">Edit</button>
+        <button class="btn btn-secondary" type="button" data-action="delete">Delete</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderLogoList() {
+  logoAdminList.innerHTML = clientLogos.map((l, i) => logoRowHtml(l, i, clientLogos.length)).join("");
+}
+
+function resetLogoForm() {
+  logoForm.reset();
+  logoFieldId.value = "";
+  pendingLogoFile = null;
+  existingLogoUrl = "";
+  logoFieldPreview.hidden = true;
+  logoFieldPreview.src = "";
+  logoFormError.textContent = "";
+}
+
+function openLogoForm(logo) {
+  resetLogoForm();
+
+  if (logo) {
+    logoFormTitle.textContent = "Edit logo";
+    logoFieldId.value = logo.id;
+    logoFieldName.value = logo.company_name ?? "";
+    logoFieldPublished.checked = Boolean(logo.published);
+
+    existingLogoUrl = logo.logo_url ?? "";
+    if (existingLogoUrl) {
+      logoFieldPreview.src = existingLogoUrl;
+      logoFieldPreview.hidden = false;
+    }
+  } else {
+    logoFormTitle.textContent = "Add logo";
+    logoFieldPublished.checked = false;
+  }
+
+  logoFormWrap.hidden = false;
+  logoFormWrap.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function closeLogoForm() {
+  logoFormWrap.hidden = true;
+  resetLogoForm();
+}
+
+async function handleLogoDelete(logo) {
+  if (!window.confirm(`Delete the "${logo.company_name}" logo? This can't be undone.`)) return;
+
+  try {
+    await deleteClientLogo(logo.id);
+    showToast("Logo deleted.");
+    await loadAndRenderLogoList();
+  } catch (err) {
+    showToast(`Delete failed: ${err.message}`, "error");
+  }
+}
+
+async function handleLogoReorder(logo, direction) {
+  const index = clientLogos.findIndex((l) => l.id === logo.id);
+  const targetIndex = direction === "up" ? index - 1 : index + 1;
+  if (targetIndex < 0 || targetIndex >= clientLogos.length) return;
+
+  const reordered = [...clientLogos];
+  [reordered[index], reordered[targetIndex]] = [reordered[targetIndex], reordered[index]];
+
+  try {
+    await Promise.all(reordered.map((l, i) => updateClientLogoSortOrder(l.id, i)));
+    showToast("Reordered.");
+    await loadAndRenderLogoList();
+  } catch (err) {
+    showToast(`Reorder failed: ${err.message}`, "error");
+  }
+}
+
+logoAdminList.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+
+  const row = button.closest(".admin-row");
+  const logo = clientLogos.find((l) => l.id === row.dataset.id);
+  if (!logo) return;
+
+  const action = button.dataset.action;
+  if (action === "edit") openLogoForm(logo);
+  else if (action === "delete") handleLogoDelete(logo);
+  else if (action === "up" || action === "down") handleLogoReorder(logo, action);
+});
+
+addLogoBtn.addEventListener("click", () => openLogoForm(null));
+logoCancelBtn.addEventListener("click", closeLogoForm);
+
+logoFieldFile.addEventListener("change", () => {
+  const file = logoFieldFile.files[0];
+  if (!file) return;
+
+  pendingLogoFile = file;
+  logoFieldPreview.src = URL.createObjectURL(file);
+  logoFieldPreview.hidden = false;
+});
+
+logoForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  logoFormError.textContent = "";
+  logoSaveBtn.disabled = true;
+  logoSaveBtn.textContent = "Saving…";
+
+  try {
+    let logoUrl = existingLogoUrl;
+    if (pendingLogoFile) {
+      logoUrl = await uploadImage(pendingLogoFile);
+    }
+
+    if (!logoUrl) throw new Error("Please choose a logo image.");
+
+    const payload = {
+      company_name: logoFieldName.value.trim(),
+      logo_url: logoUrl,
+      published: logoFieldPublished.checked,
+    };
+
+    if (logoFieldId.value) {
+      payload.id = logoFieldId.value;
+    } else {
+      payload.sort_order = clientLogos.length;
+    }
+
+    await saveClientLogo(payload);
+    showToast("Logo saved.");
+    closeLogoForm();
+    await loadAndRenderLogoList();
+  } catch (err) {
+    logoFormError.textContent = err.message;
+  } finally {
+    logoSaveBtn.disabled = false;
+    logoSaveBtn.textContent = "Save";
   }
 });
 

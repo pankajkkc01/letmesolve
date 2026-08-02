@@ -68,10 +68,69 @@ export async function updateSortOrder(id, sortOrder) {
 }
 
 /**
- * Uploads a screenshot to the public `project-images` bucket and returns
- * its public URL.
+ * Loads published client logos for the "Trusted by" strip, ordered for
+ * display. Independent of the projects table — see docs/supabase-schema.sql.
  */
-export async function uploadProjectImage(file) {
+export async function loadClientLogos() {
+  const { data, error } = await supabase
+    .from("client_logos")
+    .select("*")
+    .eq("published", true)
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    console.error("Failed to load client logos:", error.message);
+    return [];
+  }
+
+  return data ?? [];
+}
+
+/** Loads every client logo (draft + published), for the admin list. */
+export async function loadAllClientLogos() {
+  const { data, error } = await supabase
+    .from("client_logos")
+    .select("*")
+    .order("sort_order", { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+/**
+ * Creates a new client logo, or updates an existing one when `logo.id` is
+ * set. Returns the saved row.
+ */
+export async function saveClientLogo(logo) {
+  const { data, error } = await supabase
+    .from("client_logos")
+    .upsert(logo)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteClientLogo(id) {
+  const { error } = await supabase.from("client_logos").delete().eq("id", id);
+  if (error) throw error;
+}
+
+export async function updateClientLogoSortOrder(id, sortOrder) {
+  const { error } = await supabase
+    .from("client_logos")
+    .update({ sort_order: sortOrder })
+    .eq("id", id);
+
+  if (error) throw error;
+}
+
+/**
+ * Uploads an image (case-study screenshot or client logo) to the public
+ * `project-images` bucket and returns its public URL.
+ */
+export async function uploadImage(file) {
   const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "-");
   const path = `${Date.now()}-${safeName}`;
 

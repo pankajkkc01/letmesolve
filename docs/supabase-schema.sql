@@ -24,9 +24,10 @@ create table if not exists public.projects (
   impact                      text,
   tech_tags                   text[] not null default '{}',
 
-  -- media (screenshot_url / video_url point at Supabase Storage or an external link)
+  -- media (screenshot_url / video_url / client_logo_url point at Supabase Storage or an external link)
   screenshot_url              text,
   video_url                   text,
+  client_logo_url             text,
 
   -- testimonial (name renders as a working LinkedIn link when the URL is set)
   testimonial                 text,
@@ -40,6 +41,11 @@ create table if not exists public.projects (
   created_at                  timestamptz not null default now(),
   updated_at                  timestamptz not null default now()
 );
+
+-- Phase 3 addition: run this on its own if the table already existed
+-- before client_logo_url was added to the CREATE TABLE above.
+alter table public.projects
+  add column if not exists client_logo_url text;
 
 create index if not exists projects_published_sort_idx
   on public.projects (published, sort_order);
@@ -129,6 +135,67 @@ create policy "Authenticated can delete project images"
   on storage.objects for delete
   to authenticated
   using (bucket_id = 'project-images');
+
+-- ============================================================
+-- client_logos table ("Trusted by" strip — independent of case studies)
+-- ============================================================
+-- Deliberately decoupled from projects: a logo here doesn't require a full
+-- case study, and a case study doesn't need a logo. Managed from its own
+-- small section in /admin.
+
+create table if not exists public.client_logos (
+  id              uuid primary key default gen_random_uuid(),
+  company_name    text not null,
+  logo_url        text not null,
+  published       boolean not null default false,
+  sort_order      integer not null default 0,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+create index if not exists client_logos_published_sort_idx
+  on public.client_logos (published, sort_order);
+
+drop trigger if exists client_logos_set_updated_at on public.client_logos;
+create trigger client_logos_set_updated_at
+  before update on public.client_logos
+  for each row execute function public.set_updated_at();
+
+alter table public.client_logos enable row level security;
+
+drop policy if exists "Public can read published client logos" on public.client_logos;
+create policy "Public can read published client logos"
+  on public.client_logos for select
+  to anon
+  using (published = true);
+
+drop policy if exists "Authenticated can read all client logos" on public.client_logos;
+create policy "Authenticated can read all client logos"
+  on public.client_logos for select
+  to authenticated
+  using (true);
+
+drop policy if exists "Authenticated can insert client logos" on public.client_logos;
+create policy "Authenticated can insert client logos"
+  on public.client_logos for insert
+  to authenticated
+  with check (true);
+
+drop policy if exists "Authenticated can update client logos" on public.client_logos;
+create policy "Authenticated can update client logos"
+  on public.client_logos for update
+  to authenticated
+  using (true)
+  with check (true);
+
+drop policy if exists "Authenticated can delete client logos" on public.client_logos;
+create policy "Authenticated can delete client logos"
+  on public.client_logos for delete
+  to authenticated
+  using (true);
+
+-- Logo files reuse the existing project-images bucket + its policies —
+-- no new bucket needed.
 
 -- ============================================================
 -- Seed data — 1-2 sample published case studies (Phase 2 exit criteria)

@@ -6,6 +6,10 @@
   <meta name="robots" content="noindex, nofollow" />
   <title>Admin — letmesolve.in</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/components.css" />
@@ -137,6 +141,45 @@
           <p class="form-hint admin-error" id="form-error" role="alert"></p>
         </form>
       </div>
+
+      <section class="admin-section">
+        <div class="admin-panel-head">
+          <h1 class="section-title">Trusted by — company logos</h1>
+          <button id="add-logo-btn" class="btn btn-primary" type="button">+ Add logo</button>
+        </div>
+
+        <p class="form-hint" id="logo-list-status"></p>
+        <div id="logo-admin-list" class="admin-list"></div>
+
+        <div id="logo-form-wrap" class="admin-form-wrap" hidden>
+          <form id="logo-form" novalidate>
+            <input type="hidden" id="logo-field-id" />
+            <h2 class="section-title" id="logo-form-title">Add logo</h2>
+
+            <div class="form-field">
+              <label for="logo-field-name">Company name *</label>
+              <input type="text" id="logo-field-name" required />
+            </div>
+
+            <div class="form-field">
+              <label for="logo-field-file">Logo</label>
+              <input type="file" id="logo-field-file" accept="image/*" />
+              <img class="admin-image-preview" id="logo-field-preview" alt="" hidden />
+            </div>
+
+            <label class="admin-toggle">
+              <input type="checkbox" id="logo-field-published" />
+              <span>Published (unchecked = draft, hidden from the public site)</span>
+            </label>
+
+            <div class="admin-form-actions">
+              <button type="submit" class="btn btn-primary" id="logo-save-btn">Save</button>
+              <button type="button" class="btn btn-secondary" id="logo-cancel-btn">Cancel</button>
+            </div>
+            <p class="form-hint admin-error" id="logo-form-error" role="alert"></p>
+          </form>
+        </div>
+      </section>
     </section>
   </main>
 
