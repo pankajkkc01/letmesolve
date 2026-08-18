@@ -197,13 +197,13 @@ Real values live in **Vercel → Project → Environment Variables**, never in g
 **Goal:** you can manage all content, safely, with no code.
 **Scope:** 🔵 `admin.html` served at `/admin` · `auth.js` (Supabase login gate) · `admin.js` full CRUD: add / edit / delete / reorder · image upload → Storage · **all fields:** name, client, industry, problem, built (+small tech line), impact, tech tags, role, year/duration, screenshot, video, testimonial + **name-links-to-LinkedIn**, draft/published toggle · 🟢 create your admin user, disable public sign-ups.
 **Exit criteria:**
-- [ ] Login works; wrong credentials rejected; logout works
-- [ ] Unauthenticated visit to `/admin` → blocked at login (no data visible)
-- [ ] Add / edit / delete / reorder all persist and reflect on public site
-- [ ] Image upload stores to Supabase + shows on card
-- [ ] Draft entries hidden from public; published entries visible
-- [ ] Testimonial name renders as a working LinkedIn link
-- [ ] Every field renders in the **locked** template (visual consistency intact)
+- [x] Login works; wrong credentials rejected; logout works
+- [x] Unauthenticated visit to `/admin` → blocked at login (no data visible)
+- [x] Add / edit / delete / reorder all persist and reflect on public site
+- [x] Image upload stores to Supabase + shows on card
+- [x] Draft entries hidden from public; published entries visible
+- [x] Testimonial name renders as a working LinkedIn link
+- [x] Every field renders in the **locked** template (visual consistency intact)
 
 ---
 
