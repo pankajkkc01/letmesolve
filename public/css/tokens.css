@@ -3,20 +3,20 @@
    value in a component or section file — add/reuse a token here instead. */
 
 :root {
-  /* Color — surfaces */
-  --color-bg: #ffffff;
-  --color-surface: #f6f7f9;
-  --color-surface-alt: #f0f2f5;
-  --color-border: #e3e6ea;
+  /* Color — surfaces (off-white, not stark white — more depth) */
+  --color-bg: #fafafa;
+  --color-surface: #f4f5f7;
+  --color-surface-alt: #ececef;
+  --color-border: #e4e4e7;
 
-  /* Color — text */
-  --color-text: #14161a;
-  --color-text-muted: #5b6270;
-  --color-text-faint: #8a90a0;
+  /* Color — text (near-black, higher contrast than pure gray) */
+  --color-text: #09090b;
+  --color-text-muted: #52525b;
+  --color-text-faint: #8a8a93;
 
   /* Color — accent (blue, used sparingly: links, CTAs, the ".in" mark) */
-  --color-accent: #1d4ed8;
-  --color-accent-dark: #1731a3;
+  --color-accent: #2563eb;
+  --color-accent-dark: #1d4ed8;
   --color-accent-light: #eaf0fe;
   --color-accent-contrast: #ffffff;
 
@@ -26,10 +26,25 @@
   --color-error: #b91c1c;
   --color-error-bg: #fdf0f0;
 
+  /* Color — dark band tokens (hero, footer). Remapped onto the semantic
+     tokens above by the .theme-dark utility in base.css, so components
+     never need their own dark-mode styles. */
+  --color-dark-bg: #0b0b0d;
+  --color-dark-surface: #18181b;
+  --color-dark-surface-alt: #212124;
+  --color-dark-border: rgba(255, 255, 255, 0.1);
+  --color-dark-text: #fafafa;
+  --color-dark-text-muted: #a1a1aa;
+  --color-dark-text-faint: #71717a;
+  --color-dark-accent-light: rgba(37, 99, 235, 0.18);
+
   /* Type */
   --font-sans:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+    "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
     "Helvetica Neue", Arial, sans-serif;
+  --font-display:
+    "Space Grotesk", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   --font-mono:
     ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
@@ -74,9 +89,9 @@
   --radius-full: 999px;
 
   /* Shadow — subtle, professional (never heavy/dark) */
-  --shadow-sm: 0 1px 2px rgba(20, 22, 26, 0.06);
-  --shadow-md: 0 4px 16px rgba(20, 22, 26, 0.08);
-  --shadow-lg: 0 12px 32px rgba(20, 22, 26, 0.1);
+  --shadow-sm: 0 1px 2px rgba(9, 9, 11, 0.06);
+  --shadow-md: 0 8px 24px rgba(9, 9, 11, 0.08);
+  --shadow-lg: 0 20px 48px rgba(9, 9, 11, 0.12);
 
   /* Motion */
   --transition-fast: 150ms ease;

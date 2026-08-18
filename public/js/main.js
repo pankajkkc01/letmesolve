@@ -2,8 +2,8 @@
 // placeholder handler for the contact form. The form starts POSTing to
 // /api/enquiry for real in Phase 4 — until then it just tells the visitor
 // to email directly instead of failing silently.
-import { loadProjects } from "./data.js";
-import { renderProjects } from "./render.js";
+import { loadProjects, loadClientLogos } from "./data.js";
+import { renderProjects, renderClientLogos } from "./render.js";
 
 function initNavToggle() {
   const toggle = document.getElementById("nav-toggle");
@@ -54,11 +54,43 @@ function initContactFormPlaceholder() {
   });
 }
 
+/**
+ * Local-only design preview: on localhost with ?demo=1 in the URL, renders
+ * fictional sample case studies instead of hitting Supabase, so the Work
+ * section can be reviewed fully populated. Never active on the deployed
+ * site — demoData.js isn't even fetched unless both conditions hold.
+ */
+function isLocalDemoMode() {
+  const isLocalHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+  return isLocalHost && new URLSearchParams(window.location.search).get("demo") === "1";
+}
+
 async function initWork() {
+  if (isLocalDemoMode()) {
+    const { demoProjects } = await import("./demoData.js");
+    renderProjects(demoProjects);
+    return;
+  }
+
   const projects = await loadProjects();
   renderProjects(projects);
+}
+
+/**
+ * "Trusted by" strip — independent of case studies (see docs/supabase-schema.sql).
+ */
+async function initTrustedBy() {
+  if (isLocalDemoMode()) {
+    const { demoClientLogos } = await import("./demoData.js");
+    renderClientLogos(demoClientLogos);
+    return;
+  }
+
+  const logos = await loadClientLogos();
+  renderClientLogos(logos);
 }
 
 initNavToggle();
 initContactFormPlaceholder();
 initWork();
+initTrustedBy();

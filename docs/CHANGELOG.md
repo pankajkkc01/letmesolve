@@ -3,6 +3,25 @@
 All notable changes to this project are documented here, per phase, newest first.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [v0.3] — 2026-08-19 — Phase 3: Admin panel + auth
+
+### Added
+- `admin.html` (served at `/admin` via a `vercel.json` rewrite) — login screen + admin panel shell, `noindex` and kept out of `robots.txt` crawling
+- `auth.js` — `signIn` / `signOut` / `getSession` / `onAuthChange` wrapping Supabase Auth; no sign-up path exists anywhere in the UI (single-admin-user model)
+- `data.js` gains `loadAllProjects` (draft + published, for the admin list), `saveProject` (insert/update via upsert), `deleteProject`, `updateSortOrder`, `uploadImage` (uploads to the `project-images` bucket, returns its public URL)
+- `admin.js` — full CRUD wiring: add / edit / delete, up/down reordering (renumbers `sort_order` for the whole list on every move so ordering never drifts), screenshot upload with a live preview, draft/published toggle (new entries default to draft), all fields from the schema including the testimonial name-links-to-LinkedIn behavior reused from the public renderer
+- `admin.css` — login screen + admin list/form styling, tokens only
+- `docs/SETUP.md` — Phase 3 section: creating the single admin user in the Supabase dashboard, disabling public sign-ups
+- `client_logos` table (independent of `projects`) + its own admin CRUD section — "Trusted by" logo marquee on the homepage, each logo optionally linking out to `website_url` in a new tab
+- Homepage visual redesign: real About-section photo (`assets/pankaj.jpg`) replacing the placeholder, services section becomes an auto-scrolling marquee with a 5th card (Custom Software Builds) and a reduced-motion fallback that wraps to a static grid, copy polish across hero/services/about/contact
+- Local-only `?demo=1` preview mode (`demoData.js`) for reviewing the Work section and logo strip without touching Supabase — never active on the deployed site
+
+### Notes
+- Manual QA passed: login / wrong-credentials rejection / logout, unauthenticated `/admin` blocked with no data visible, add/edit/delete/reorder for both case studies and logos persisting and reflecting on the public site, image upload to Storage, draft vs. published visibility, testimonial name rendering as a working LinkedIn link — all verified against a live Supabase project via a Vercel preview deployment of this branch
+- Reordering always renumbers every row's `sort_order` to its new array index rather than swapping two raw values — avoids ordering drift if rows ever end up with duplicate/gapped `sort_order` values
+- Image filenames are sanitized before use as the storage object key (non-alphanumeric characters replaced with `-`) to avoid upload failures on filenames with spaces/special characters
+- `projects.client_logo_url` is a leftover column from before `client_logos` became its own table — unused by any code path; left in place, candidate for a future cleanup migration
+
 ## [v0.2] — 2026-07-31 — Phase 2: Supabase data layer
 
 ### Added

@@ -33,17 +33,40 @@ function renderTestimonial(project) {
   `;
 }
 
+function renderWindow(project) {
+  const label = escapeHtml(project.client || project.industry || project.name);
+  const media = project.screenshot_url
+    ? `<img src="${escapeHtml(project.screenshot_url)}" alt="${escapeHtml(project.name)} screenshot" loading="lazy" />`
+    : `<div class="case-media-placeholder" aria-hidden="true">${escapeHtml((project.name || "?").charAt(0).toUpperCase())}</div>`;
+
+  const impactBadge = project.impact
+    ? `<span class="case-impact-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
+        ${escapeHtml(project.impact)}
+      </span>`
+    : "";
+
+  return `
+    <div class="case-window">
+      <div class="case-window-bar">
+        <span class="case-window-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="case-window-url">${label}</span>
+      </div>
+      <div class="case-media">
+        ${media}
+        ${impactBadge}
+      </div>
+    </div>
+  `;
+}
+
 function renderCard(project) {
   const meta = [project.client, project.industry].filter(Boolean).join(" · ");
   const roleYear = [project.role, project.duration].filter(Boolean).join(" · ");
 
   return `
     <article class="card case-card">
-      ${
-        project.screenshot_url
-          ? `<div class="case-media"><img src="${escapeHtml(project.screenshot_url)}" alt="${escapeHtml(project.name)} screenshot" loading="lazy" /></div>`
-          : ""
-      }
+      ${renderWindow(project)}
       <div class="case-body">
         <div class="case-head">
           <h3 class="card-title">${escapeHtml(project.name)}</h3>
@@ -51,7 +74,6 @@ function renderCard(project) {
         </div>
         ${project.problem ? `<p class="case-block"><strong>Problem:</strong> ${escapeHtml(project.problem)}</p>` : ""}
         ${project.built ? `<p class="case-block"><strong>Built:</strong> ${escapeHtml(project.built)}</p>` : ""}
-        ${project.impact ? `<p class="case-block"><strong>Impact:</strong> ${escapeHtml(project.impact)}</p>` : ""}
         ${renderTechTags(project.tech_tags)}
         ${roleYear ? `<p class="case-role">${escapeHtml(roleYear)}</p>` : ""}
         ${
@@ -66,6 +88,54 @@ function renderCard(project) {
 }
 
 /**
+ * Fades each case-study tile in as it scrolls into view. Skipped entirely
+ * for prefers-reduced-motion — tiles just appear at full opacity instead.
+ */
+function initCardReveal(list) {
+  const cards = list.querySelectorAll(".case-card");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    cards.forEach((card) => card.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  cards.forEach((card) => observer.observe(card));
+}
+
+/**
+ * Renders the "Trusted by" logo strip from published client_logos rows.
+ * Independent of case studies — see docs/supabase-schema.sql. No-op
+ * (leaves the element empty) if there are none.
+ */
+export function renderClientLogos(logos) {
+  const container = document.getElementById("logo-marquee");
+  if (!container || !logos || logos.length === 0) return;
+
+  const logoImg = (logo) => {
+    const img = `<img src="${escapeHtml(logo.logo_url)}" alt="${escapeHtml(logo.company_name)}" loading="lazy" />`;
+    return logo.website_url
+      ? `<a class="logo-tile" href="${escapeHtml(logo.website_url)}" target="_blank" rel="noopener noreferrer">${img}</a>`
+      : `<span class="logo-tile">${img}</span>`;
+  };
+
+  // Duplicated so the CSS animation (translateX(-50%)) loops seamlessly.
+  const track = [...logos, ...logos].map(logoImg).join("");
+  container.innerHTML = `<div class="logo-marquee-track">${track}</div>`;
+}
+
+/**
  * Replaces the Work section's list with rendered case studies.
  * No-op on an empty array — the pre-rendered empty-state stays visible.
  */
@@ -73,5 +143,18 @@ export function renderProjects(projects) {
   const list = document.getElementById("work-list");
   if (!list || !projects || projects.length === 0) return;
 
-  list.innerHTML = projects.map(renderCard).join("");
+  const cardsHtml = projects.map(renderCard).join("");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (reduceMotion) {
+    // No auto-scroll for reduced-motion users — wrap into a static grid instead
+    // of a track, so every card stays reachable without relying on animation.
+    list.classList.add("work-list-static");
+    list.innerHTML = cardsHtml;
+    initCardReveal(list);
+  } else {
+    // Duplicated so the CSS animation (translateX(-50%)) loops seamlessly.
+    list.innerHTML = `<div class="work-track">${cardsHtml}${cardsHtml}</div>`;
+    initCardReveal(list.querySelector(".work-track"));
+  }
 }

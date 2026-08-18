@@ -8,6 +8,13 @@
   box-sizing: border-box;
 }
 
+/* The hidden attribute must always win, even over elements whose class
+   (e.g. .btn) sets its own explicit display — author rules of equal
+   specificity otherwise beat the browser's built-in [hidden] rule. */
+[hidden] {
+  display: none !important;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
 }
@@ -36,9 +43,10 @@ body {
 
 h1, h2, h3, h4 {
   margin: 0;
+  font-family: var(--font-display);
   font-weight: var(--fw-semibold);
   line-height: var(--lh-tight);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 p {
@@ -85,6 +93,22 @@ input, textarea, select {
 
 .section {
   padding-block: var(--space-9);
+}
+
+/* Remaps the semantic color tokens onto the dark palette for a whole block
+   (hero, footer) — every component underneath (buttons, chips, links) just
+   reads the same variables and gets dark styling for free. */
+.theme-dark {
+  --color-bg: var(--color-dark-bg);
+  --color-surface: var(--color-dark-surface);
+  --color-surface-alt: var(--color-dark-surface-alt);
+  --color-border: var(--color-dark-border);
+  --color-text: var(--color-dark-text);
+  --color-text-muted: var(--color-dark-text-muted);
+  --color-text-faint: var(--color-dark-text-faint);
+  --color-accent-light: var(--color-dark-accent-light);
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 .section-surface {
