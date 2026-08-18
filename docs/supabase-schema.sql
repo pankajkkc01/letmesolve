@@ -147,11 +147,17 @@ create table if not exists public.client_logos (
   id              uuid primary key default gen_random_uuid(),
   company_name    text not null,
   logo_url        text not null,
+  website_url     text,
   published       boolean not null default false,
   sort_order      integer not null default 0,
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
 );
+
+-- Phase 3 addition: run this on its own if the table already existed
+-- before website_url was added to the CREATE TABLE above.
+alter table public.client_logos
+  add column if not exists website_url text;
 
 create index if not exists client_logos_published_sort_idx
   on public.client_logos (published, sort_order);

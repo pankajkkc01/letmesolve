@@ -40,6 +40,7 @@ const logoFieldId = document.getElementById("logo-field-id");
 const logoFieldName = document.getElementById("logo-field-name");
 const logoFieldFile = document.getElementById("logo-field-file");
 const logoFieldPreview = document.getElementById("logo-field-preview");
+const logoFieldWebsite = document.getElementById("logo-field-website");
 const logoFieldPublished = document.getElementById("logo-field-published");
 
 const formWrap = document.getElementById("project-form-wrap");
@@ -362,6 +363,7 @@ function openLogoForm(logo) {
     logoFormTitle.textContent = "Edit logo";
     logoFieldId.value = logo.id;
     logoFieldName.value = logo.company_name ?? "";
+    logoFieldWebsite.value = logo.website_url ?? "";
     logoFieldPublished.checked = Boolean(logo.published);
 
     existingLogoUrl = logo.logo_url ?? "";
@@ -455,6 +457,7 @@ logoForm.addEventListener("submit", async (event) => {
     const payload = {
       company_name: logoFieldName.value.trim(),
       logo_url: logoUrl,
+      website_url: logoFieldWebsite.value.trim() || null,
       published: logoFieldPublished.checked,
     };
 

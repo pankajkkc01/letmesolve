@@ -123,8 +123,12 @@ export function renderClientLogos(logos) {
   const container = document.getElementById("logo-marquee");
   if (!container || !logos || logos.length === 0) return;
 
-  const logoImg = (logo) =>
-    `<span class="logo-tile"><img src="${escapeHtml(logo.logo_url)}" alt="${escapeHtml(logo.company_name)}" loading="lazy" /></span>`;
+  const logoImg = (logo) => {
+    const img = `<img src="${escapeHtml(logo.logo_url)}" alt="${escapeHtml(logo.company_name)}" loading="lazy" />`;
+    return logo.website_url
+      ? `<a class="logo-tile" href="${escapeHtml(logo.website_url)}" target="_blank" rel="noopener noreferrer">${img}</a>`
+      : `<span class="logo-tile">${img}</span>`;
+  };
 
   // Duplicated so the CSS animation (translateX(-50%)) loops seamlessly.
   const track = [...logos, ...logos].map(logoImg).join("");

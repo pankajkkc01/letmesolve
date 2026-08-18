@@ -142,10 +142,10 @@ export const demoProjects = [
 // Independent of demoProjects — mirrors the real client_logos table, which
 // is deliberately decoupled from case studies (see docs/supabase-schema.sql).
 export const demoClientLogos = [
-  { id: "logo-1", company_name: "Northwind Freight", logo_url: monogramLogo("NF", "#1d4ed8"), published: true, sort_order: 1 },
-  { id: "logo-2", company_name: "Baseline Analytics", logo_url: monogramLogo("BA", "#09090b"), published: true, sort_order: 2 },
-  { id: "logo-3", company_name: "Ferro & Co", logo_url: monogramLogo("FC", "#2563eb"), published: true, sort_order: 3 },
-  { id: "logo-4", company_name: "Clearview Dental", logo_url: monogramLogo("CD", "#0f766e"), published: true, sort_order: 4 },
-  { id: "logo-5", company_name: "Harrow Retail Group", logo_url: monogramLogo("HR", "#7c3aed"), published: true, sort_order: 5 },
-  { id: "logo-6", company_name: "Pixel & Pine Studio", logo_url: monogramLogo("PP", "#c2410c"), published: true, sort_order: 6 },
+  { id: "logo-1", company_name: "Northwind Freight", logo_url: monogramLogo("NF", "#1d4ed8"), website_url: "https://example.com", published: true, sort_order: 1 },
+  { id: "logo-2", company_name: "Baseline Analytics", logo_url: monogramLogo("BA", "#09090b"), website_url: "https://example.com", published: true, sort_order: 2 },
+  { id: "logo-3", company_name: "Ferro & Co", logo_url: monogramLogo("FC", "#2563eb"), website_url: "https://example.com", published: true, sort_order: 3 },
+  { id: "logo-4", company_name: "Clearview Dental", logo_url: monogramLogo("CD", "#0f766e"), website_url: "https://example.com", published: true, sort_order: 4 },
+  { id: "logo-5", company_name: "Harrow Retail Group", logo_url: monogramLogo("HR", "#7c3aed"), website_url: "https://example.com", published: true, sort_order: 5 },
+  { id: "logo-6", company_name: "Pixel & Pine Studio", logo_url: monogramLogo("PP", "#c2410c"), website_url: "https://example.com", published: true, sort_order: 6 },
 ];

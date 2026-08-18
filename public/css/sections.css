@@ -121,21 +121,54 @@
 
 /* ---- Services ---- */
 
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-5);
+.services-list {
+  position: relative;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
 }
 
-@media (min-width: 900px) {
-  .services-grid {
-    grid-template-columns: repeat(4, 1fr);
+.services-track {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-5);
+  width: max-content;
+  animation: services-marquee-scroll 40s linear infinite;
+}
+
+.services-list:hover .services-track {
+  animation-play-state: paused;
+}
+
+.services-track .card {
+  width: min(80vw, 300px);
+  flex-shrink: 0;
+}
+
+@keyframes services-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }
 
-@media (max-width: 600px) {
-  .services-grid {
-    grid-template-columns: 1fr;
+@media (prefers-reduced-motion: reduce) {
+  .services-list {
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .services-track {
+    flex-wrap: wrap;
+    width: 100%;
+    animation: none;
+  }
+
+  .services-track [aria-hidden="true"] {
+    display: none;
   }
 }
 
