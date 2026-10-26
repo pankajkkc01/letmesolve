@@ -268,3 +268,38 @@ on conflict (id) do update set
   tech_tags = excluded.tech_tags,
   published = excluded.published,
   sort_order = excluded.sort_order;
+
+-- ============================================================
+-- enquiries table (Phase 4 - contact form submissions)
+-- ============================================================
+-- Written ONLY by /api/enquiry using the service_role key (which bypasses RLS).
+-- No anon policies on purpose: the public can't read or write this table
+-- directly. You (authenticated) can read/delete rows from the dashboard or a
+-- future lead-tracking admin screen.
+
+create table if not exists public.enquiries (
+  id          uuid primary key default gen_random_uuid(),
+  name        text not null,
+  email       text not null,
+  company     text not null,
+  problem     text,
+  heard_from  text,
+  created_at  timestamptz not null default now()
+);
+
+create index if not exists enquiries_created_idx
+  on public.enquiries (created_at desc);
+
+alter table public.enquiries enable row level security;
+
+drop policy if exists "Authenticated can read enquiries" on public.enquiries;
+create policy "Authenticated can read enquiries"
+  on public.enquiries for select
+  to authenticated
+  using (true);
+
+drop policy if exists "Authenticated can delete enquiries" on public.enquiries;
+create policy "Authenticated can delete enquiries"
+  on public.enquiries for delete
+  to authenticated
+  using (true);

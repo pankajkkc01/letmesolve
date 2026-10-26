@@ -276,6 +276,10 @@
               </div>
             </div>
             <div class="form-field">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
+            </div>
+            <div class="form-field">
               <label for="problem">What's the problem?</label>
               <textarea id="problem" name="problem" rows="4"></textarea>
             </div>
@@ -283,8 +287,12 @@
               <label for="heard">How did you hear about me?</label>
               <input type="text" id="heard" name="heard" autocomplete="off" />
             </div>
+            <div class="form-hp" aria-hidden="true">
+              <label for="website">Leave this empty</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
             <button class="btn btn-primary btn-block" type="submit">Send message</button>
-            <p class="form-hint" id="contact-form-hint">This form isn't wired up yet — email me directly for now.</p>
+            <p class="form-hint" id="contact-form-hint">I reply personally, usually within 1–2 working days.</p>
           </form>
         </div>
       </div>
