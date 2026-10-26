@@ -3,6 +3,17 @@
 All notable changes to this project are documented here, per phase, newest first.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+- **Admin panel removed (decision 2026-10-27).** Content (case studies, "Trusted by" logos) is now managed in code: edit `public/js/content.js`, drop images in `public/assets/`, commit and push. The homepage no longer reads projects/logos from Supabase.
+- Existing 6 client logos + 2 case studies migrated into `content.js`; their images were downloaded from Supabase Storage into `public/assets/logos/` and `public/assets/projects/`.
+- Linked logos get hover/focus affordance, a new-tab aria-label, and the duplicated marquee copy is skipped by Tab/screen readers.
+
+### Removed
+- `admin.html`, `admin.js`, `auth.js`, `data.js`, `supabaseClient.js`, `config.js`, `demoData.js`, `admin.css`, the `/admin` rewrite in `vercel.json`, and the `/admin` line in `robots.txt`.
+- Supabase is now used only for the `enquiries` table (written by `/api/enquiry`). The `projects` / `client_logos` tables and `project-images` bucket are unused and can be dropped from the dashboard whenever convenient.
+
 ## [v0.3] — 2026-08-19 — Phase 3: Admin panel + auth
 
 ### Added

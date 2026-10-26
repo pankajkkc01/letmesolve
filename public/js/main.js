@@ -1,8 +1,8 @@
-// Boot: mobile nav toggle, case studies fetched from Supabase, and the
+// Boot: mobile nav toggle, case studies + client logos (content.js), and the
 // contact form (form.js -> POST /api/enquiry).
 import { initContactForm } from "./form.js";
-import { loadProjects, loadClientLogos } from "./data.js";
-import { renderProjects, renderClientLogos, renderWorkState } from "./render.js";
+import { projects, clientLogos } from "./content.js";
+import { renderProjects, renderClientLogos } from "./render.js";
 
 function initNavToggle() {
   const toggle = document.getElementById("nav-toggle");
@@ -43,47 +43,7 @@ function showToast(message, variant = "success") {
   }, 4000);
 }
 
-/**
- * Local-only design preview: on localhost with ?demo=1 in the URL, renders
- * fictional sample case studies instead of hitting Supabase, so the Work
- * section can be reviewed fully populated. Never active on the deployed
- * site — demoData.js isn't even fetched unless both conditions hold.
- */
-function isLocalDemoMode() {
-  const isLocalHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
-  return isLocalHost && new URLSearchParams(window.location.search).get("demo") === "1";
-}
-
-async function initWork() {
-  if (isLocalDemoMode()) {
-    const { demoProjects } = await import("./demoData.js");
-    renderProjects(demoProjects);
-    return;
-  }
-
-  try {
-    renderProjects(await loadProjects());
-  } catch (err) {
-    console.error("Failed to load projects:", err.message);
-    renderWorkState("error");
-  }
-}
-
-/**
- * "Trusted by" strip — independent of case studies (see docs/supabase-schema.sql).
- */
-async function initTrustedBy() {
-  if (isLocalDemoMode()) {
-    const { demoClientLogos } = await import("./demoData.js");
-    renderClientLogos(demoClientLogos);
-    return;
-  }
-
-  const logos = await loadClientLogos();
-  renderClientLogos(logos);
-}
-
 initNavToggle();
 initContactForm(showToast);
-initWork();
-initTrustedBy();
+renderProjects(projects);
+renderClientLogos(clientLogos);

@@ -15,7 +15,7 @@ letmesolve/
 
 - `public/index.html` — the site itself (plain HTML, no build step)
 - `public/css/` — styles split by concern (tokens → base → components → sections)
-- `public/js/` — ES modules, one job per file (config, data, render, auth, admin, form, main)
+- `public/js/` — ES modules, one job per file (content, render, form, main) — site content lives in `content.js`
 - `api/enquiry.js` — validates + saves an enquiry, sends emails via Mailjet
 - `docs/CHANGELOG.md` — dated record of what shipped each phase
 

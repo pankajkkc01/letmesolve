@@ -123,56 +123,42 @@ export function renderClientLogos(logos) {
   const container = document.getElementById("logo-marquee");
   if (!container || !logos || logos.length === 0) return;
 
-  const logoImg = (logo) => {
-    const img = `<img src="${escapeHtml(logo.logo_url)}" alt="${escapeHtml(logo.company_name)}" loading="lazy" />`;
-    return logo.website_url
-      ? `<a class="logo-tile" href="${escapeHtml(logo.website_url)}" target="_blank" rel="noopener noreferrer">${img}</a>`
-      : `<span class="logo-tile">${img}</span>`;
+  // `isCopy` marks the duplicate set: hidden from screen readers and skipped by
+  // Tab, so keyboard users move through each logo once.
+  const logoImg = (logo, isCopy) => {
+    const name = escapeHtml(logo.company_name);
+    const img = `<img src="${escapeHtml(logo.logo_url)}" alt="${name}" loading="lazy" />`;
+    if (!logo.website_url) return `<span class="logo-tile"${isCopy ? ' aria-hidden="true"' : ""}>${img}</span>`;
+
+    const copyAttrs = isCopy ? ' aria-hidden="true" tabindex="-1"' : "";
+    return `<a class="logo-tile logo-tile-link" href="${escapeHtml(logo.website_url)}" target="_blank" rel="noopener noreferrer" aria-label="${name} (opens website in a new tab)"${copyAttrs}>${img}</a>`;
   };
 
   // Duplicated so the CSS animation (translateX(-50%)) loops seamlessly.
-  const track = [...logos, ...logos].map(logoImg).join("");
+  const track = [...logos.map((l) => logoImg(l, false)), ...logos.map((l) => logoImg(l, true))].join("");
   container.innerHTML = `<div class="logo-marquee-track">${track}</div>`;
 }
 
+const EMPTY_WORK_HTML = `
+  <div class="empty-state">
+    <p class="empty-state-title">Case studies are coming soon</p>
+    <p class="empty-state-text">
+      I'm publishing finished client work here as projects wrap up.
+      Want to be one of the first? <a class="contact-link" href="#contact">Get in touch</a>.
+    </p>
+  </div>`;
+
 /**
- * Replaces the Work section's list with rendered case studies.
- * No-op on an empty array — the pre-rendered empty-state stays visible.
+ * Replaces the Work section's list with rendered case studies, or the empty
+ * state when there are none.
  */
-const WORK_STATES = {
-  empty: {
-    title: "Case studies are coming soon",
-    text: `I'm publishing finished client work here as projects wrap up.
-      Want to be one of the first? <a class="contact-link" href="#contact">Get in touch</a>.`,
-  },
-  error: {
-    title: "Couldn't load case studies",
-    text: `Something went wrong on my end. Please refresh the page, or
-      <a class="contact-link" href="#contact">get in touch</a> and I'll walk you through my work directly.`,
-  },
-};
-
-/** Replaces the Work list with an empty or error message. */
-export function renderWorkState(state) {
-  const list = document.getElementById("work-list");
-  if (!list) return;
-  const { title, text } = WORK_STATES[state];
-  list.removeAttribute("aria-busy");
-  list.innerHTML = `
-    <div class="empty-state" role="${state === "error" ? "alert" : "status"}">
-      <p class="empty-state-title">${title}</p>
-      <p class="empty-state-text">${text}</p>
-    </div>`;
-}
-
 export function renderProjects(projects) {
   const list = document.getElementById("work-list");
   if (!list) return;
   if (!projects || projects.length === 0) {
-    renderWorkState("empty");
+    list.innerHTML = EMPTY_WORK_HTML;
     return;
   }
-  list.removeAttribute("aria-busy");
 
   const cardsHtml = projects.map(renderCard).join("");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

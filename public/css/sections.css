@@ -425,7 +425,8 @@
   animation: logo-marquee-scroll 28s linear infinite;
 }
 
-.logo-marquee:hover .logo-marquee-track {
+.logo-marquee:hover .logo-marquee-track,
+.logo-marquee:focus-within .logo-marquee-track {
   animation-play-state: paused;
 }
 
@@ -449,9 +450,24 @@
   transition: opacity var(--transition-fast), filter var(--transition-fast);
 }
 
-.logo-tile:hover img {
+.logo-tile:hover img,
+.logo-tile:focus-visible img {
   filter: grayscale(0%);
   opacity: 1;
+}
+
+/* Linked logos: pointer + small lift so it's clear they're clickable */
+.logo-tile-link {
+  cursor: pointer;
+}
+
+.logo-tile-link img {
+  transition: opacity var(--transition-fast), filter var(--transition-fast), transform var(--transition-fast);
+}
+
+.logo-tile-link:hover img,
+.logo-tile-link:focus-visible img {
+  transform: scale(1.06);
 }
 
 @keyframes logo-marquee-scroll {

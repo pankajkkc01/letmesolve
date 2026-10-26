@@ -195,6 +195,7 @@ Real values live in **Vercel → Project → Environment Variables**, never in g
 
 ### Phase 3 — Admin panel + auth  → tag `v0.3`
 **Goal:** you can manage all content, safely, with no code.
+> ⚠️ **Superseded 2026-10-27:** the admin panel was removed; content is now edited in `public/js/content.js`. See CHANGELOG → Unreleased.
 **Scope:** 🔵 `admin.html` served at `/admin` · `auth.js` (Supabase login gate) · `admin.js` full CRUD: add / edit / delete / reorder · image upload → Storage · **all fields:** name, client, industry, problem, built (+small tech line), impact, tech tags, role, year/duration, screenshot, video, testimonial + **name-links-to-LinkedIn**, draft/published toggle · 🟢 create your admin user, disable public sign-ups.
 **Exit criteria:**
 - [x] Login works; wrong credentials rejected; logout works
