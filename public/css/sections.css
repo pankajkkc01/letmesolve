@@ -652,3 +652,23 @@
 .footer-links a:hover {
   color: var(--color-text);
 }
+
+/* Enquiry form: inline errors + honeypot (off-screen, for bots only) */
+.field-error {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: #c0392b;
+}
+
+.form-field input[aria-invalid="true"],
+.form-field textarea[aria-invalid="true"] {
+  border-color: #c0392b;
+}
+
+.form-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

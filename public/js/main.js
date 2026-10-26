@@ -1,7 +1,6 @@
-// Boot: mobile nav toggle, case studies fetched from Supabase, and a
-// placeholder handler for the contact form. The form starts POSTing to
-// /api/enquiry for real in Phase 4 — until then it just tells the visitor
-// to email directly instead of failing silently.
+// Boot: mobile nav toggle, case studies fetched from Supabase, and the
+// contact form (form.js -> POST /api/enquiry).
+import { initContactForm } from "./form.js";
 import { loadProjects, loadClientLogos } from "./data.js";
 import { renderProjects, renderClientLogos } from "./render.js";
 
@@ -44,16 +43,6 @@ function showToast(message, variant = "success") {
   }, 4000);
 }
 
-function initContactFormPlaceholder() {
-  const form = document.getElementById("contact-form");
-  if (!form) return;
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    showToast("Not live yet — email info@letmesolve.in for now.", "error");
-  });
-}
-
 /**
  * Local-only design preview: on localhost with ?demo=1 in the URL, renders
  * fictional sample case studies instead of hitting Supabase, so the Work
@@ -91,6 +80,6 @@ async function initTrustedBy() {
 }
 
 initNavToggle();
-initContactFormPlaceholder();
+initContactForm(showToast);
 initWork();
 initTrustedBy();

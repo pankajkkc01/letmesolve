@@ -2,6 +2,7 @@
   "name": "letmesolve",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "description": "letmesolve.in - portfolio + reach-out pipeline (buildless static frontend, Vercel serverless backend)",
   "engines": {
     "node": ">=18"
