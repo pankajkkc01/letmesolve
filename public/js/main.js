@@ -2,7 +2,7 @@
 // contact form (form.js -> POST /api/enquiry).
 import { initContactForm } from "./form.js";
 import { loadProjects, loadClientLogos } from "./data.js";
-import { renderProjects, renderClientLogos } from "./render.js";
+import { renderProjects, renderClientLogos, renderWorkState } from "./render.js";
 
 function initNavToggle() {
   const toggle = document.getElementById("nav-toggle");
@@ -61,8 +61,12 @@ async function initWork() {
     return;
   }
 
-  const projects = await loadProjects();
-  renderProjects(projects);
+  try {
+    renderProjects(await loadProjects());
+  } catch (err) {
+    console.error("Failed to load projects:", err.message);
+    renderWorkState("error");
+  }
 }
 
 /**

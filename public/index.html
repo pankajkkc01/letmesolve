@@ -7,19 +7,22 @@
   <meta name="description" content="I design and build the systems that turn messy business problems into working software — workflow automation, internal tools, and integrations." />
   <link rel="canonical" href="https://letmesolve.in/" />
 
-  <!-- Open Graph / social preview (branded image arrives in Phase 5) -->
+  <!-- Open Graph / social preview -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="letmesolve.in" />
   <meta property="og:title" content="letmesolve.in — Pankaj Sharma, System Builder" />
   <meta property="og:description" content="I design and build the systems that turn messy business problems into working software." />
   <meta property="og:url" content="https://letmesolve.in/" />
   <meta property="og:image" content="https://letmesolve.in/assets/og-preview.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="letmesolve.in — Pankaj Sharma, System Builder" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="letmesolve.in — Pankaj Sharma, System Builder" />
   <meta name="twitter:description" content="I design and build the systems that turn messy business problems into working software." />
   <meta name="twitter:image" content="https://letmesolve.in/assets/og-preview.jpg" />
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231D4ED8'/%3E%3Ctext x='50' y='68' font-family='monospace' font-size='58' font-weight='700' fill='white' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,7 +46,7 @@
   </script>
 </head>
 <body>
-  <a class="visually-hidden" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="nav">
     <div class="container" style="display: flex; align-items: center; justify-content: space-between; position: relative;">
@@ -205,14 +208,16 @@
           <p class="section-subtitle">Real systems, built for real teams — with the problem, what I built, and the impact.</p>
         </div>
 
-        <div class="work-list" id="work-list">
-          <div class="empty-state">
-            <p class="empty-state-title">Case studies are coming soon</p>
-            <p class="empty-state-text">
-              I'm publishing finished client work here as projects wrap up.
-              Want to be one of the first? <a class="contact-link" style="display:inline; color: var(--color-accent);" href="#contact">Get in touch</a>.
-            </p>
+        <div class="work-list" id="work-list" aria-busy="true">
+          <div class="empty-state" role="status">
+            <p class="empty-state-title">Loading case studies…</p>
           </div>
+          <noscript>
+            <div class="empty-state">
+              <p class="empty-state-title">JavaScript is needed to show case studies</p>
+              <p class="empty-state-text">Please enable it, or <a class="contact-link" href="#contact">get in touch</a> directly.</p>
+            </div>
+          </noscript>
         </div>
       </div>
     </section>
@@ -261,7 +266,6 @@
               </a>
             </div>
             <p class="card-text">Not sure where AI or automation actually fits in your business yet? Reach out for a quick consult — no build commitment required.</p>
-            <p class="form-hint">LinkedIn &amp; WhatsApp links go live in a later phase.</p>
           </div>
 
           <form class="contact-form" id="contact-form" novalidate>

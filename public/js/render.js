@@ -139,9 +139,40 @@ export function renderClientLogos(logos) {
  * Replaces the Work section's list with rendered case studies.
  * No-op on an empty array — the pre-rendered empty-state stays visible.
  */
+const WORK_STATES = {
+  empty: {
+    title: "Case studies are coming soon",
+    text: `I'm publishing finished client work here as projects wrap up.
+      Want to be one of the first? <a class="contact-link" href="#contact">Get in touch</a>.`,
+  },
+  error: {
+    title: "Couldn't load case studies",
+    text: `Something went wrong on my end. Please refresh the page, or
+      <a class="contact-link" href="#contact">get in touch</a> and I'll walk you through my work directly.`,
+  },
+};
+
+/** Replaces the Work list with an empty or error message. */
+export function renderWorkState(state) {
+  const list = document.getElementById("work-list");
+  if (!list) return;
+  const { title, text } = WORK_STATES[state];
+  list.removeAttribute("aria-busy");
+  list.innerHTML = `
+    <div class="empty-state" role="${state === "error" ? "alert" : "status"}">
+      <p class="empty-state-title">${title}</p>
+      <p class="empty-state-text">${text}</p>
+    </div>`;
+}
+
 export function renderProjects(projects) {
   const list = document.getElementById("work-list");
-  if (!list || !projects || projects.length === 0) return;
+  if (!list) return;
+  if (!projects || projects.length === 0) {
+    renderWorkState("empty");
+    return;
+  }
+  list.removeAttribute("aria-busy");
 
   const cardsHtml = projects.map(renderCard).join("");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

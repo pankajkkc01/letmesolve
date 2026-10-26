@@ -5,8 +5,8 @@ import { supabase } from "./supabaseClient.js";
 
 /**
  * Loads published case studies, ordered for display.
- * Returns an empty array on any failure so the public page always has
- * something safe to render (see render.js) instead of throwing.
+ * Throws on failure so the caller can show an error state (distinct from
+ * the empty state, which means "loaded fine, nothing published yet").
  */
 export async function loadProjects() {
   const { data, error } = await supabase
@@ -15,11 +15,7 @@ export async function loadProjects() {
     .eq("published", true)
     .order("sort_order", { ascending: true });
 
-  if (error) {
-    console.error("Failed to load projects:", error.message);
-    return [];
-  }
-
+  if (error) throw error;
   return data ?? [];
 }
 
